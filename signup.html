@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Watch Dog - Signup</title>
+  </head>
+
+  <style>
+    body {font-family: Arial, Helvetica, sans-serif;}
+    * {box-sizing: border-box}
+
+    /* Full-width input fields */
+    input[type=text], input[type=password] {
+      font-size: 12pt;
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      display: inline-block;
+      border: none;
+      background: #f1f1f1;
+    }
+
+    input[type=text]:focus, input[type=password]:focus {
+      background-color: #ddd;
+      outline: none;
+    }
+
+    hr {
+      border: 1px solid #f1f1f1;
+      margin-bottom: 25px;
+    }
+
+    .container {
+      padding: 16px;
+      margin:0 auto;
+      width: 70%;
+    }
+
+    .error {
+      font-size: 10pt;
+      color: red;
+    }
+
+    /* Set a style for all buttons */
+    button {
+      font-size: 12pt;
+      background-color: #03989E;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      cursor: pointer;
+      width: 15%;
+      opacity: 0.9;
+    }
+
+    button:hover {
+      opacity:1;
+    }
+
+    /* Extra styles for the cancel button */
+
+    /* Float cancel and signup buttons and add an equal width */
+    .cancelbtn, .signupbtn {
+      float: left;
+      width: 100%;
+    }
+
+    /* Add padding to container elements */
+
+    /* Clear floats */
+    .clearfix::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+
+    /* Change styles for cancel button and signup button on extra small screens */
+    @media screen and (max-width: 300px) {
+      .cancelbtn, .signupbtn {
+        width: 100%;
+      }
+    }
+  </style>
+
+
+  <body>
+    <form id="signUpForm" action="" method="post" style="border:1px solid #ccc; margin-top: 5%; width: 50%;margin-left: auto;margin-right: auto;">
+  
+      <div class="container" >
+        <img src="logo.png" style="display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 70%;">
+        <h1>Sign Up</h1>
+
+        <p>Please fill all the details to create an account.</p>
+
+        <hr>
+        <input id = "signUpName" type="text" placeholder="Enter User Name" required>
+
+        <input id = "signUpEmailId" type="text" placeholder="Enter Email" required>
+
+        <input id = "signUpPassword" type="password" placeholder="Enter Password" required>
+
+        <input id = "reEnterPassword" type="password" placeholder="Re-Enter Password" required>
+        <br>
+        <label for="signUpRole">Choose your Role</label>
+        <select id="signUpRole">
+          <option value="Project Leader">Project Leader</option>
+          <option value="Project Member">Project Member</option>
+        </select>
+
+        <div class="clearfix">
+          <button type="submit" class="signupbtn" id = "signUpButton">Sign Up</button>
+        </div>
+
+      </div>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="User.js"> </script>
+		<script src="Task.js"> </script>
+		<script src="Project.js"> </script>
+		<script src="script.js"> </script>
+
+  </body>
+</html> 

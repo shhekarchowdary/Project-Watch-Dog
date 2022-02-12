@@ -1,0 +1,48 @@
+<!Doctype html>
+<html>
+<style>
+.btn-group button {
+
+  background-color: #04AA6D; /* Green background */
+  border: 1px solid green; /* Green border */
+  color: white; /* White text */
+  padding: 15px 28px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  width: 50%;/* Set a width if needed */
+  size:20;
+  margin-left:25%;
+  margin-right:25%;
+  display: block;/* Make the buttons appear below each other */
+
+}
+
+.btn-group button:not(:last-child) {
+
+  border-bottom: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover { 
+  background-color: #3e8e41;
+}
+</style>
+<body>
+
+<h1 style = "text-align:center;"> Project Page</h1>
+<input type="text" placeholder="Project Name: " id="ppText" required>
+<div style = "text-align:center;" class="btn-group" >
+  <button id="task1" style = "text-align:left;" >
+  Task Name : <br>
+  Assigned To : </button>
+  <button id="task1" style = "text-align:left;">
+    Task Name : <br>
+  Assigned To : </button>
+  <button id="task1" style = "text-align:left;">  Task Name : <br>
+  Assigned To : </button>
+  
+  <button id="task1" style = "text-align:center;" >Create Task </button>
+</div>
+
+</body>
+</html>
+
