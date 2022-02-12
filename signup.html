@@ -97,7 +97,7 @@
         <p>Please fill all the details to create an account.</p>
 
         <hr>
-        <input id = "signUpName" type="text" placeholder="Enter User Name" required>
+        <input id = "signUpName" type="text" placeholder="Enter User-Name(unique)" required>
 
         <input id = "signUpEmailId" type="text" placeholder="Enter Email" required>
 
@@ -112,7 +112,7 @@
         </select>
 
         <div class="clearfix">
-          <button type="submit" class="signupbtn" id = "signUpButton">Sign Up</button>
+          <button type="button" class="signupbtn" id = "signUpButton">Sign Up</button>
         </div>
 
       </div>
@@ -122,7 +122,7 @@
     <script src="User.js"> </script>
     <script src="Task.js"> </script>
     <script src="Project.js"> </script>
-    <script src="script.js"> </script>
+   
 
     <script type="module">
       // Import the functions you need from the SDKs you need
@@ -148,16 +148,16 @@
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
 
-      import {getDatabase, ref, set, child, get}
-      from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
+      import { getDatabase, ref, set, child, get}
+        from "https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js";
+      
+      const db = getDatabase();
 
-      const db = getDatabase;
+      console.log("inscript");
 
-      $('#signUpForm').submit(function(e) {
-
+      function registerUser(){
         var allGood = true;
         console.log("hehvbhbv")
-        e.preventDefault();
         var first_name = $('#signUpName').val();
         var email = $('#signUpEmailId').val();
         var password = $('#signUpPassword').val();
@@ -165,8 +165,6 @@
         var role = $( "#signUpRole option:selected" ).val();
 
         console.log(first_name);
-
-        $(".error").remove();
 
         if (first_name.length < 1) {
           $('#signUpName').after('<span class="error">This field is required</span>');
@@ -198,14 +196,15 @@
           const newUser = new User(first_name, email, password, role);
           var newUserJson = JSON.stringify(newUser);
           const dbRef = ref(db);
-          get(child(dbRef, "Users/" + email)).then((snapshot)=>{
+          get(child(dbRef, "Users/" + first_name)).then((snapshot)=>{
             if(snapshot.exists()){
               alert("Account already exists with this mail Id");
             }
             else{
-              set(ref(db, "Users/" + email),
+              set(ref(db, "Users/" + first_name),
               {
-                newUser
+                uName: newUser.uName, uMailId: newUser.uMailId, uPassword: newUser.uPassword, uRole: newUser.uRole
+
               }).then(()=>{
                 alert("User Creation Successfull");
               }).catch((error)=>{
@@ -215,8 +214,12 @@
           });
 
         }
+      }
 
-      });
+      const a = document.getElementById("signUpButton");
+      a.addEventListener('click', registerUser);
+
+      
 
     </script>
 

@@ -77,7 +77,7 @@ span.psw {
 
   <div class="container">
     <label ><b>Mail Id</b></label>
-    <input id ="mailid" type="text" placeholder="Enter Mail Id"  required>
+    <input id ="userName" type="text" placeholder="User Name"  required>
 
     <label ><b>Password</b></label>
     <input id ="psw" type="password" placeholder="Enter Password" required>
@@ -124,34 +124,28 @@ span.psw {
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
 
-  import {getDatabase, ref, set, child, get}
-  from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
-
-  const db = getDatabase;
+  import { getDatabase, ref, set, child, get}
+    from "https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js";
+      
+  const db = getDatabase();
 
   $('#loginForm').submit(function(e) {
 
     var allGood = true;
     console.log("hehvbhbv")
     e.preventDefault();
-    var email = $('#mailid').val();
+    var userName = $('#userName').val();
     var password = $('#psw').val();
 
-    console.log(first_name);
+    console.log(userName);
 
     $(".error").remove();
 
     
-    if (email.length < 1) {
-      $('#signUpEmailId').after('<span class="error">This field is required</span>');
+    if (userName.length < 1) {
+      $('#userName').after('<span class="error">This field is required</span>');
+      console.log("jsbjsf");
       allGood = false;
-    } else {
-      var regEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-      var validEmail = regEx.test(email);
-      if (!validEmail) {
-        $('#signUpEmailId').after('<span class="error">Enter a valid email</span>');
-        allGood = false;
-      }
     }
     if (password.length < 8) {
       $('#signUpPassword').after('<span class="error">Invalid Password long</span>');
@@ -161,7 +155,7 @@ span.psw {
     if(allGood){
       
       const dbRef = ref(db);
-      get(child(dbRef, "Users/" + email)).then((snapshot)=>{
+      get(child(dbRef, "Users/" + userName)).then((snapshot)=>{
         if(snapshot.exists()){
           let dbpass = snapshot.val().uPassword;
 
@@ -173,7 +167,7 @@ span.psw {
 
         }
         else{
-          alert("No User exists with given mailId");
+          alert("No User exists with given userName");
         }
       });
     }
