@@ -44,20 +44,23 @@
     if(allGood){
       const newUser = new User(first_name, email, password, role);
       var newUserJson = JSON.stringify(newUser);
-      
-      let req = new XMLHttpRequest();
-
-      req.onreadystatechange = () => {
-        if (req.readyState == XMLHttpRequest.DONE) {
-          console.log(req.responseText);
+      const dbRef = ref(db);
+      get(child(dbRef, "Users/" + email)).then((snapshot)=>{
+        if(snapshot.exists()){
+          alert("Account already exists with this mail Id");
         }
-      };
-        
-      req.open("POST", "https://api.jsonbin.io/v3/b", true);
-      req.setRequestHeader("Content-Type", "application/json");
-      req.setRequestHeader("X-Master-Key", "$2b$10$ztxUx.cgonTCzFgRnvPqpuAeIHGRrBP1cijK.k5kAKH8TPYsQMIVK");
-      req.send(newUserJson);
-
+        else{
+          set(ref(db, "Users/" + email),
+          {
+            newUserJson
+          }).then(()=>{
+            alert("User Creation Successfull");
+          }).catch((error)=>{
+            alert("error:"+ error);
+          })
+        }
+      });
+      
 
     }
     
