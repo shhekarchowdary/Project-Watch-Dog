@@ -43,84 +43,116 @@ body {font-family: Arial;}
 }
 </style>
 </head>
-<body>
+  <body>
 
-<h2>Dash Board Page</h2>
+    <script>
+      function openCity(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+      }
 
-<div class="tab">
-  <button class="tablinks" onclick="openCity(event, 'liveProject')">Live Projects</button>
-  <button class="tablinks" onclick="openCity(event, 'completedProject')">Completed Projects </button>
-</div>
+      function createProject(){
+        window.location = "projectcreationpage.html";
+      }
 
-<div id="liveProject" class="tabcontent">
-  <button style="font-size : 20px" type="submit" id="liveP1">
-  Project Name : <br>
-  Total Tasks :  <br>
-  Total People : <br>
-  
-</button><br>
+    </script>
 
-<button style="font-size : 20px" type="submit" id="liveP2">
-  Project Name : <br>
-  Total Tasks :  <br>
-  Total People : <br>
-</button><br>
+    <h2 id="loggedInUser"> </h2>
 
-<button style="font-size : 20px" type="submit" id="liveP3">
-  Project Name : <br>
-  Total Tasks :  <br>
-  Total People : <br>
-</button><br>
+    <div class="tab">
+      <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'liveProject')">Live Projects</button>
+      <button class="tablinks" onclick="openCity(event, 'completedProject')">Completed Projects </button>
+    </div>
 
-<button style="font-size : 20px" type="submit" id ="liveP4">
-  Project Name : <br>
-  Total Tasks :  <br>
-  Total People : <br>
-</button><br>
-</div>
+    <div id="liveProject" class="tabcontent">
+      <button style="font-size : 20px" type="submit" id="createProjectBtn" onclick="createProject()">
+        + Create Project
+      </button>
+    </div>
+    
+    <div id="completedProject" class="tabcontent">
+      <h3>Paris</h3>
+      <p>Paris is the capital of France.</p> 
+    </div>
 
-<div id="completedProject" class="tabcontent">
-  <button style="font-size : 20px" type="submit" id="completeP1">
-  Project Name : <br>
-  Total Tasks :  <br>
-  Total People : <br>
-  
-</button><br>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="User.js"> </script>
+    <script src="Task.js"> </script>
+    <script src="Project.js"> </script>
+    
 
-<button style="font-size : 20px" type="submit" id="completeP2">
-  Project Name : <br>
-  Total Tasks :  <br>
-  Total People : <br>
-</button><br>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
 
-<button style="font-size : 20px" type="submit" id="completeP3">
-  Project Name : <br>
-  Total Tasks :  <br>
-  Total People : <br>
-</button><br>
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyBISWujg930834MdNnS44qxUpviqxndxXE",
+        authDomain: "watchdog-6ccf1.firebaseapp.com",
+        databaseURL: "https://watchdog-6ccf1-default-rtdb.firebaseio.com",
+        projectId: "watchdog-6ccf1",
+        storageBucket: "watchdog-6ccf1.appspot.com",
+        messagingSenderId: "576445336209",
+        appId: "1:576445336209:web:99e7e1d1150bdb99844d30",
+        measurementId: "G-Q7RC5GPMCC"
+      };
 
-<button style="font-size : 20px" type="submit" id="completeP4">
-  Project Name : <br>
-  Total Tasks :  <br>
-  Total People : <br>
-</button><br>
-</div>
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
 
-<script>
-function openCity(evt, cityName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " active";
-}
-</script>
-   
-</body>
+      import { getDatabase, ref, set, child, get}
+        from "https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js";
+          
+      const db = getDatabase();
+
+      //-------------------------------------------checking if the user exixts-----------------//
+      const loggedUser = JSON.parse(sessionStorage.user);
+      
+      console.log(loggedUser.uName);
+      const userHeader = document.getElementById("loggedInUser");
+      userHeader.innerText = loggedUser.uName;
+      const noOfProjects = loggedUser.uProjectIds.length;
+      console.log(noOfProjects);
+      document.getElementById("defaultOpen").click();
+
+       
+      if(loggedUser.uRole == "Project Member"){
+        $("#createProjectBtn").hide();
+      }
+
+      if(noOfProjects > 1){
+        var i = 0;
+        for(i = 1; i <= noOfProjects-1; i++) {
+          var $btn = $('<button/>', {
+            text: loggedUser.uProjectIds[i], //set text 1 to 10
+            id: loggedUser.uProjectIds[i],
+            click: function () { 
+
+              alert(this.id); 
+
+            }
+          });
+          $("#liveProject").append($btn);
+        }
+      }
+
+      
+      
+    </script>
+    
+  </body>
 </html> 

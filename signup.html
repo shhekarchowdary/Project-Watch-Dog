@@ -193,7 +193,7 @@
         } 
 
         if(allGood){
-          const newUser = new User(first_name, email, password, role);
+          const newUser = new User(first_name, email, password, role, ["pwd123"]);
           var newUserJson = JSON.stringify(newUser);
           const dbRef = ref(db);
           get(child(dbRef, "Users/" + first_name)).then((snapshot)=>{
@@ -203,7 +203,11 @@
             else{
               set(ref(db, "Users/" + first_name),
               {
-                uName: newUser.uName, uMailId: newUser.uMailId, uPassword: newUser.uPassword, uRole: newUser.uRole
+                uName: newUser.uName,
+                uMailId: newUser.uMailId, 
+                uPassword: newUser.uPassword, 
+                uRole: newUser.uRole,
+                uProjectIds: newUser.uProjectIds
 
               }).then(()=>{
                 alert("User Creation Successfull");

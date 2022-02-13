@@ -174,9 +174,10 @@ span.psw {
   });
 
   function login(user){
-    sessionStorage.setItem('user',user);
+    alert("Login Successful");
+    sessionStorage.setItem('user',JSON.stringify(user));
     console.log("User Logged In: "+ user.uName);
-    //window.location = "dashboard.html";
+    window.location = "dashboard.html";
   }
 
 
