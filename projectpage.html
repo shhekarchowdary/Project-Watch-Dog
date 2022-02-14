@@ -29,7 +29,7 @@
 <body>
 
 <h1 style = "text-align:center;"> Project Page</h1>
-<input type="text" placeholder="Project Name: " id="ppText" required>
+<label id="userName" ></label> <label id="projectName" ></label>
 <div style = "text-align:center;" class="btn-group" >
   <button id="task1" style = "text-align:left;" >
   Task Name : <br>
@@ -42,6 +42,21 @@
   
   <button id="task1" style = "text-align:center;" >Create Task </button>
 </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="User.js"> </script>
+  <script src="Task.js"> </script>
+  <script src="Project.js"> </script>
+
+  <script>
+    const loggedUser = JSON.parse(sessionStorage.user);
+    const projectSelected = JSON.parse(sessionStorage.projectSelected);
+
+    $("#userName").text(loggedUser.uName + "-->");
+    $("#projectName").text(projectSelected.pName);
+
+    
+  </script>
 
 </body>
 </html>

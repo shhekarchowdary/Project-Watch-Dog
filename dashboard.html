@@ -135,14 +135,26 @@ body {font-family: Arial;}
       }
 
       if(noOfProjects > 1){
+        const dbRef = ref(db);
         var i = 0;
         for(i = 1; i <= noOfProjects-1; i++) {
           var $btn = $('<button/>', {
             text: loggedUser.uProjectIds[i], //set text 1 to 10
             id: loggedUser.uProjectIds[i],
-            click: function () { 
+            click: function () {
+              alert(this.id);
+              var pId = this.id;
+              get(child(dbRef, "Projects/" + pId)).then((snapshot)=>{
+                if(snapshot.exists()){
+                  var nProject = snapshot.val();
+                  sessionStorage.setItem('projectSelected',JSON.stringify(nProject));
+                  console.log("Project Selected: "+ nProject.pName);
+                  window.location = "projectpage.html";
+                }
+                else{
 
-              alert(this.id); 
+                }
+              });
 
             }
           });

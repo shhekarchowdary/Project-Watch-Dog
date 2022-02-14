@@ -88,7 +88,7 @@ button:hover {
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
 
-  import { getDatabase, ref, set, child, get}
+  import { getDatabase, ref, set, child, get, update}
     from "https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js";
   
   const db = getDatabase();
@@ -155,57 +155,113 @@ button:hover {
               get(child(dbRef, "Users/" + projectMems[k])).then((snapshot)=>{
                 if(snapshot.exists()){
                   
-                }
+                } 
                 else{
                   usersVerified = false;
+                  console.log("In Loop - " + usersVerified);
                   alert(projectMems[k] + " - User Not Exists");
                 }
               });
             }
-
           }
 
           if(usersVerified){
+            console.log(usersVerified);
             const dbRef = ref(db);
-            get(child(dbRef, "Projects/" + projectName)).then((snapshot)=>{
-              if(snapshot.exists()){
-                usersVerified = false;
-                alert(projectName + " - Already Exists, Give some unique name.");
-              }else{
-                alert("You are Good to go - Press Add Project");
-                var $btn1 = $('<button/>', {
-                  text: "Add Project", //set text 1 to 10
-                  id: "addProject",
-                  type: "button",
-                  class: "userInputs",
-                  click: function () { 
-                    const dbRef = ref(db);
-                    get(child(dbRef, "Projects/" + projectName)).then((snapshot)=>{
-                      if(snapshot.exists()){
-                        //alert("Account already exists with this mail Id");
-                      }
-                      else{
-                        set(ref(db, "Projects/" + projectName),
-                        {
-                          pName: projectName,
-                          pLeader: loggedUser.uName, 
-                          uMembers: projectMems
+            
+            var $btn1 = $('<button/>', {
+              text: "Add Project", //set text 1 to 10
+              id: "addProject",
+              type: "button",
+              class: "userInputs",
+              click: function () {
+                if(usersVerified){
+                  const dbRef = ref(db);
+                  //-------------------Creating Project in DB ----------------------------
+                  get(child(dbRef, "Projects/" + projectName)).then((snapshot)=>{
+                    if(snapshot.exists()){
+                      alert("Project name already there choose some differenet name");
+                    }
+                    else{
+                      set(ref(db, "Projects/" + projectName),
+                      {
+                        pName: projectName,
+                        pLeader: loggedUser.uName, 
+                        uMembers: projectMems
 
-                        }).then(()=>{
-                          alert("Project Creation Successfull");
-                        }).catch((error)=>{
-                          alert("error:"+ error);
-                        })
+                      }).then(()=>{
+                        const newProject = {
+                        pName: projectName,
+                        pLeader: loggedUser.uName, 
+                        uMembers: projectMems
+                        }
+                        alert("Project Creation Successfull");
+                        sessionStorage.setItem('projectSelected',JSON.stringify(newProject));
+                        console.log("Project Selected: "+ newProject.pName);
+                        window.location = "projectpage.html";
+                      }).catch((error)=>{
+                        alert("error:"+ error);
+                      })
+                      //-------------------Updating the loggeduser Project Ids with the newly created Project ----------------------------
+                      loggedUser.uProjectIds.push(projectName);
+
+                      update(ref(db, "Users/" + loggedUser.uName),
+                      {
+                        uName: loggedUser.uName,
+                        uMailId: loggedUser.uMailId, 
+                        uPassword: loggedUser.uPassword, 
+                        uRole: loggedUser.uRole,
+                        uProjectIds: loggedUser.uProjectIds
+
+                      }).then(()=>{
+                        console.log("User updation Successfull");
+                      }).catch((error)=>{
+                        alert("error:"+ error);
+                      })
+
+                      //----------------------------------------------Doing the same with Project Members ----------------------------
+                      for( k = 0; k < projectMems.length; k++){
+                        //console.log("Users/" + projectMems[k]);
+                        get(child(dbRef, "Users/" + projectMems[k])).then((snapshot)=>{
+                          if(snapshot.exists()){
+                            const tempUser = snapshot.val();
+                            console.log(tempUser);
+                            console.log(tempUser.uProjectIds);
+                            tempUser.uProjectIds.push(projectName);
+                            console.log(tempUser.uProjectIds);
+                            console.log(tempUser);
+                            update(ref(db, "Users/" + tempUser.uName),
+                            {
+                              uName: tempUser.uName,
+                              uMailId: tempUser.uMailId, 
+                              uPassword: tempUser.uPassword, 
+                              Role: tempUser.uRole,
+                              uProjectIds: tempUser.uProjectIds
+
+                            }).then(()=>{
+                              console.log("User updation Successfull");
+                            }).catch((error)=>{
+                              alert("error:"+ error);
+                            })
+                          } 
+                          else{
+                            usersVerified = false;
+                            alert(projectMems[k] + " - User Not Exists");
+                          }
+                        });
                       }
-                    });
-                  }
-                });
-                $("#projectForm").append($btn1);
+                    }
+                  });
+                }else{
+                  alert("Problem with Project Members");
+                }   
+                
               }
             });
+            $("#projectForm").append($btn1);
+            $($btn1).after("<br>");
             
-          }
-
+          }///
         }
       });
       $("#projectForm").append($btn);
