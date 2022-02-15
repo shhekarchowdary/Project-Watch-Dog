@@ -28,19 +28,16 @@
 </style>
 <body>
 
-<h1 style = "text-align:center;"> Project Page</h1>
+  <script>
+    function createTask(){
+      window.location = "taskcreation.html";
+    }
+  </script>
+
+<h1 style = "text-align:center;" id="projectHeader"> Project Page</h1>
 <label id="userName" ></label> <label id="projectName" ></label>
 <div style = "text-align:center;" class="btn-group" >
-  <button id="task1" style = "text-align:left;" >
-  Task Name : <br>
-  Assigned To : </button>
-  <button id="task1" style = "text-align:left;">
-    Task Name : <br>
-  Assigned To : </button>
-  <button id="task1" style = "text-align:left;">  Task Name : <br>
-  Assigned To : </button>
-  
-  <button id="task1" style = "text-align:center;" >Create Task </button>
+  <button id="createTask" style = "text-align:center;" onclick = "createTask()" >Create Task </button>
 </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -48,14 +45,79 @@
   <script src="Task.js"> </script>
   <script src="Project.js"> </script>
 
-  <script>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBISWujg930834MdNnS44qxUpviqxndxXE",
+      authDomain: "watchdog-6ccf1.firebaseapp.com",
+      databaseURL: "https://watchdog-6ccf1-default-rtdb.firebaseio.com",
+      projectId: "watchdog-6ccf1",
+      storageBucket: "watchdog-6ccf1.appspot.com",
+      messagingSenderId: "576445336209",
+      appId: "1:576445336209:web:99e7e1d1150bdb99844d30",
+      measurementId: "G-Q7RC5GPMCC"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  
+    import { getDatabase, ref, set, child, get}
+      from "https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js";
+        
+    const db = getDatabase();
+  
     const loggedUser = JSON.parse(sessionStorage.user);
     const projectSelected = JSON.parse(sessionStorage.projectSelected);
 
     $("#userName").text(loggedUser.uName + "-->");
     $("#projectName").text(projectSelected.pName);
+      
+    console.log(loggedUser.uName);
+    const projectHeader = document.getElementById("projectHeader");
+    projectHeader.innerText = "Project: " + projectSelected.pName;
+    const noOfTasks = projectSelected.uTasks.length;
+    console.log(noOfTasks);
 
-    
+       
+    if(loggedUser.uRole == "Project Member"){
+      $("#createTask").hide();
+    }
+
+    if(noOfTasks >= 1){
+      const dbRef = ref(db);
+      for(var i = 0; i < noOfTasks; i++) {
+        var $btn = $('<button/>', {
+          text: projectSelected.uTasks[i], //set text 1 to 10
+          id: projectSelected.uTasks[i],
+          click: function () {
+            alert(this.id);
+            var tId = this.id;
+            get(child(dbRef, "Tasks/" + (projectSelected.pName + "_" + tId))).then((snapshot)=>{
+              if(snapshot.exists()){
+                var nTask = snapshot.val();
+                sessionStorage.setItem('taskSelected',JSON.stringify(nTask));
+                console.log("Task Selected: "+ nTask.tName);
+                window.location = "projectpage.html";
+              }
+              else{
+
+              }
+            });
+
+          }
+        });
+        $(".btn-group").append($btn);
+      }
+    }
+  
   </script>
 
 </body>
